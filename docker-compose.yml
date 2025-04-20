@@ -16,7 +16,7 @@ services:
       - DB_DIALECT=${DB_DIALECT}
       - REDIS_HOST=${REDIS_HOST}
       - REDIS_PORT=${REDIS_PORT}
-      - AUTH_TOKEN_SECRET=${AUTH_TOKEN_SECRET}
+      - AUTH_TOKEN=${AUTH_TOKEN}
     depends_on:
       - db
       - redis
