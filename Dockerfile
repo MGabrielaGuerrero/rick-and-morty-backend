@@ -1,22 +1,30 @@
 # Dockerfile
 FROM node:18
 
-# Crear directorio de la app
+# create app directory
 WORKDIR /app
 
-# Copiar package.json e instalar dependencias
+# Copy package.json and install depencencies
 COPY package*.json ./
 RUN npm install
 
-# Copiar el resto del código
+# Install netcat y wait-for
+RUN apt-get update && \
+    apt-get install -y curl netcat-openbsd && \
+    rm -rf /var/lib/apt/lists/* && \
+    curl -o /usr/local/bin/wait-for https://raw.githubusercontent.com/Eficode/wait-for/master/wait-for && \
+    chmod +x /usr/local/bin/wait-for
+
+# Copy source code
 COPY . .
 
-# Compilar TypeScript
+# compile typescript
 RUN npm run build
 
-# Exponer el puerto del servidor (ajusta si usas otro)
+# expose the app port
 EXPOSE 4000
 
-# Comando para arrancar la app
-CMD ["node", "dist/app.js"]
+# start the app and wait for db and redis
+CMD ["sh", "-c", "wait-for db:3306 -- wait-for redis:6379 -- node dist/app.js"]
+
 
