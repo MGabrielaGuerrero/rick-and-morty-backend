@@ -43,7 +43,7 @@ REDIS_HOST=redis # localhost or redis
 REDIS_PORT=6379
 REDIS_PASS=
 
-AUTH_TOKEN_SECRET=prueba1704
+AUTH_TOKEN=my-secret-token
 
 GRAPHQL_URL=https://rickandmortyapi.com/graphql
 SWAGGER_URL=http://localhost:4000
