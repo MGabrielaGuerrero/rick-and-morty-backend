@@ -1,0 +1,240 @@
+openapi: 3.0.0
+info:
+  title: Rick and Morty GraphQL API
+  version: 1.0.0
+  description: >
+    GraphQL API that allows querying characters, locations, and episodes from the Rick and Morty universe.
+
+servers:
+  - url: http://localhost:4000
+    description: Local server
+
+paths:
+  /graphql:
+    post:
+      summary: Execute a GraphQL query
+      description: >
+        Send a GraphQL query or mutation to the server. Use the `query` field and optionally `variables` to parameterize.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - query
+              properties:
+                query:
+                  type: string
+                variables:
+                  type: object
+            examples:
+              ConsultaConFiltro:
+                summary: Search for characters named Rick who are alive
+                value:
+                  query: |
+                    query {
+                      characters(filter: { name: "rick", status: "Alive" }) {
+                        id
+                        name
+                        status
+                        gender
+                        species
+                      }
+                    }
+                  responses:
+                    '200':
+                      description: Successful response
+                      content:
+                        application/json:
+                          example: |
+                            {
+                              "data": {
+                                "characters": [
+                                  {
+                                    "id": "1",
+                                    "name": "Rick Sanchez",
+                                    "status": "Alive",
+                                    "gender": "Male",
+                                    "species": "Human"
+                                  }
+                                ]
+                              }
+                            }
+              ConsultaConVariables:
+                summary: Search for a character using variable ID
+                value:
+                  query: |
+                    query getCharacter($id: Int!) {
+                      character(id: $id) {
+                        id
+                        name
+                        status
+                        species
+                        gender
+                        originLocation { id name }
+                        currentLocation { id name }
+                      }
+                    }
+                  variables:
+                    id: 1
+                  responses:
+                    '200':
+                      description: Successful response
+                      content:
+                        application/json:
+                          example: |
+                            {
+                              "data": {
+                                "character": {
+                                  "id": "1",
+                                  "name": "Rick Sanchez",
+                                  "status": "Alive",
+                                  "species": "Human",
+                                  "gender": "Male",
+                                  "originLocation": {
+                                    "id": "1",
+                                    "name": "Earth (C-137)"
+                                  },
+                                  "currentLocation": {
+                                    "id": "3",
+                                    "name": "Citadel of Ricks"
+                                  }
+                                }
+                              }
+                            }
+              ConsultaPorIdLocation:
+                summary: Search for a location by ID
+                value:
+                  query: |
+                    query getLocation($id: Int!) {
+                      location(id: $id) {
+                        id
+                        name
+                        type
+                        dimension
+                      }
+                    }
+                  variables:
+                    id: 1
+                  responses:
+                    '200':
+                      description: Successful response
+                      content:
+                        application/json:
+                          example: |
+                            {
+                              "data": {
+                                "location": {
+                                  "id": "1",
+                                  "name": "Earth (C-137)",
+                                  "type": "Planet",
+                                  "dimension": "Dimension C-137"
+                                }
+                              }
+                            }
+              ConsultaTodasLasLocations:
+                summary: Search for all locations
+                value:
+                  query: |
+                    query {
+                      locations {
+                        id
+                        name
+                        type
+                        dimension
+                        created
+                        residents
+                      }
+                    }
+                  responses:
+                    '200':
+                      description: Successful response
+                      content:
+                        application/json:
+                          example: |
+                            {
+                              "data": {
+                                "locations": [
+                                  {
+                                    "id": "1",
+                                    "name": "Earth (C-137)",
+                                    "type": "Planet",
+                                    "dimension": "Dimension C-137",
+                                    "created": null,
+                                    "residents": null
+                                  }
+                                ]
+                              }
+                            }
+              ConsultaPorIdEpisode:
+                summary: Search for an episode by ID
+                value:
+                  query: |
+                    query getEpisode($id: Int!) {
+                      episodesByIds(ids: [$id]) {
+                        id
+                        name
+                        air_date
+                        episode
+                      }
+                    }
+                  variables:
+                    id: 1
+                  responses:
+                    '200':
+                      description: Successful response
+                      content:
+                        application/json:
+                          example: |
+                            {
+                              "data": {
+                                "episodesByIds": {
+                                  "id": "1",
+                                  "name": "Pilot",
+                                  "air_date": "2013-12-02T05:00:00.000Z",
+                                  "episode": "S01E01"
+                                }
+                              }
+                            }
+      responses:
+        '200':
+          description: Successful excute
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        locations:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              line:
+                                type: integer
+                              column:
+                                type: integer
+      security:
+        - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []
+
+
+                    
