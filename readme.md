@@ -23,7 +23,7 @@ Data is synchronized from the [Rick and Morty GraphQL API](https://rickandmortya
 
 ### 1. Clone the repository
 ```bash
-https://github.com/your-username/rick-and-morty-backend.git
+git clone https://github.com/MGabrielaGuerrero/rick-and-morty-backend.git
 cd rick-and-morty-backend
 ```
 
@@ -193,7 +193,7 @@ src/
 ---
 
 ## 🧠 Author
-Developed by [Your Name](https://github.com/your-username) as a technical challenge.
+Developed by [Maria Gabriela Guerrer](https://github.com/MGabrielaGuerrero/rick-and-morty-backend.git) as a technical challenge.
 
 
 
